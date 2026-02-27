@@ -1,10 +1,14 @@
-import { ChatInputCommandInteraction, SlashCommandBuilder } from "discord.js";
+import {
+  ChatInputCommandInteraction,
+  SlashCommandBuilder,
+  SlashCommandOptionsOnlyBuilder
+} from "discord.js";
 import { addDroolerCommand } from "./addDrooler";
 import { droolerCommand } from "./drooler";
 import { pingCommand } from "./ping";
 
 export type Command = {
-  data: SlashCommandBuilder;
+  data: SlashCommandBuilder | SlashCommandOptionsOnlyBuilder;
   execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
 };
 

@@ -1,8 +1,8 @@
 CREATE TABLE IF NOT EXISTS drooler_counter (
-  id INTEGER PRIMARY KEY,
+  split TEXT NOT NULL,
+  year INTEGER NOT NULL,
+  team TEXT NOT NULL DEFAULT '',
   count INTEGER NOT NULL
+  ,
+  PRIMARY KEY (split, year, team)
 );
-
-INSERT INTO drooler_counter (id, count)
-VALUES (1, 0)
-ON CONFLICT (id) DO NOTHING;
