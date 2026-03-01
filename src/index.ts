@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { Client, GatewayIntentBits } from "discord.js";
 import { commands, commandMap } from "./commands";
-import { INTERNATIONAL_TEAMS, LEC_TEAMS } from "./teams";
+import { INTERNATIONAL_TEAMS, LEC_TEAMS, SPLITS } from "./teams";
 import { ensureDroolerTable, ensureHansFlashTable } from "./db";
 
 const token = process.env.DISCORD_TOKEN;
@@ -25,14 +25,23 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isAutocomplete()) {
-    if (interaction.commandName !== "add_hans" && interaction.commandName !== "hans_maga") return;
+    if (
+      interaction.commandName !== "add_hans" &&
+      interaction.commandName !== "hans_maga" &&
+      interaction.commandName !== "add_drooler" &&
+      interaction.commandName !== "drooler"
+    ) {
+      return;
+    }
     const focused = interaction.options.getFocused(true);
     const split = interaction.options.getString("split");
     const isLecSplit = split === "winter" || split === "spring" || split === "summer";
     const query = focused.value.toLowerCase();
 
     let options: { name: string; value: string }[] = [];
-    if (focused.name === "equipe_lec") {
+    if (focused.name === "split") {
+      options = SPLITS;
+    } else if (focused.name === "equipe_lec") {
       options = isLecSplit ? LEC_TEAMS : [];
     } else if (focused.name === "equipe") {
       options = isLecSplit ? LEC_TEAMS : [];

@@ -7,13 +7,9 @@ const data = new SlashCommandBuilder()
   .addStringOption((option) =>
     option
       .setName("split")
-      .setDescription("Split de la game (Winter, Spring, Summer)")
+      .setDescription("Split de la game")
       .setRequired(false)
-      .addChoices(
-        { name: "Winter", value: "winter" },
-        { name: "Spring", value: "spring" },
-        { name: "Summer", value: "summer" }
-      )
+      .setAutocomplete(true)
   )
   .addIntegerOption((option) =>
     option

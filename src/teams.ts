@@ -32,3 +32,12 @@ export const INTERNATIONAL_TEAMS = [
   { name: "Team Secret Whales", value: "TSW" },
   { name: "LOUD Esports", value: "LOUD" }
 ];
+
+export const SPLITS = [
+  { name: "Winter", value: "winter" },
+  { name: "First Stand", value: "FST" },
+  { name: "Spring", value: "spring" },
+  { name: "Mid-Season Invitational", value: "MSI" },
+  { name: "Summer", value: "summer" },
+  { name: "Worlds", value: "worlds" }
+];

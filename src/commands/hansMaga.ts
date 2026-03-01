@@ -3,7 +3,7 @@ import { getHansFlashCount, getHansFlashCountForYear } from "../db";
 
 const data = new SlashCommandBuilder()
   .setName("hans_maga")
-  .setDescription("Apffiche le nombre de flash-in de Hans Maga")
+  .setDescription("Affiche le nombre de flash-in de Hans Maga")
   .addStringOption((option) =>
     option
       .setName("split")
