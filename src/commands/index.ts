@@ -4,7 +4,9 @@ import {
   SlashCommandOptionsOnlyBuilder
 } from "discord.js";
 import { addDroolerCommand } from "./addDrooler";
+import { addHansCommand } from "./addHans";
 import { droolerCommand } from "./drooler";
+import { hansMagaCommand } from "./hansMaga";
 import { pingCommand } from "./ping";
 
 export type Command = {
@@ -12,6 +14,12 @@ export type Command = {
   execute: (interaction: ChatInputCommandInteraction) => Promise<void>;
 };
 
-export const commands: Command[] = [pingCommand, addDroolerCommand, droolerCommand];
+export const commands: Command[] = [
+  pingCommand,
+  addDroolerCommand,
+  droolerCommand,
+  addHansCommand,
+  hansMagaCommand
+];
 
 export const commandMap = new Map(commands.map((c) => [c.data.name, c]));
