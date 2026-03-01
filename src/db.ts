@@ -35,16 +35,28 @@ export async function ensureDroolerTable() {
 }
 
 export async function getRulerCaughtCount(split: string, year: number, team?: string | null) {
+  if (team) {
+    const result = await pool.query(
+      `
+        SELECT count
+        FROM drooler_counter
+        WHERE split = $1 AND year = $2 AND team = $3
+      `,
+      [split, year, team]
+    );
+    if (result.rowCount === 0) return 0;
+    return result.rows[0].count as number;
+  }
+
   const result = await pool.query(
     `
-      SELECT count
+      SELECT COALESCE(SUM(count), 0) AS count
       FROM drooler_counter
-      WHERE split = $1 AND year = $2 AND team = $3
+      WHERE split = $1 AND year = $2
     `,
-    [split, year, team ?? ""]
+    [split, year]
   );
-  if (result.rowCount === 0) return 0;
-  return result.rows[0].count as number;
+  return (result.rows[0]?.count as number) ?? 0;
 }
 
 export async function incrementRulerCaughtCount(
@@ -68,13 +80,25 @@ export async function incrementRulerCaughtCount(
 }
 
 export async function getRulerCaughtCountForYear(year: number, team?: string | null) {
+  if (team) {
+    const result = await pool.query(
+      `
+        SELECT COALESCE(SUM(count), 0) AS count
+        FROM drooler_counter
+        WHERE year = $1 AND team = $2
+      `,
+      [year, team]
+    );
+    return (result.rows[0]?.count as number) ?? 0;
+  }
+
   const result = await pool.query(
     `
       SELECT COALESCE(SUM(count), 0) AS count
       FROM drooler_counter
-      WHERE year = $1 AND team = $2
+      WHERE year = $1
     `,
-    [year, team ?? ""]
+    [year]
   );
   return (result.rows[0]?.count as number) ?? 0;
 }
