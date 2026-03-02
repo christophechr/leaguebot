@@ -41,6 +41,7 @@ client.on("interactionCreate", async (interaction) => {
     const query = focused.value.toLowerCase();
 
     let options: { name: string; value: string }[] = [];
+    console.log(`Autocomplete for ${interaction.commandName}, focused: ${focused.name}, query: ${query}`);
     if (focused.name === "split") {
       options = SPLITS;
     } else if (focused.name === "equipe") {
