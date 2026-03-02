@@ -25,38 +25,48 @@ client.once("ready", () => {
 
 client.on("interactionCreate", async (interaction) => {
   if (interaction.isAutocomplete()) {
-    if (
-      interaction.commandName !== "add_hans" &&
-      interaction.commandName !== "hans_maga" &&
-      interaction.commandName !== "add_drooler" &&
-      interaction.commandName !== "drooler"
-    ) {
+    try {
+      if (
+        interaction.commandName !== "add_hans" &&
+        interaction.commandName !== "hans_maga" &&
+        interaction.commandName !== "add_drooler" &&
+        interaction.commandName !== "drooler"
+      ) {
+        return;
+      }
+      const command = commandMap.get(interaction.commandName);
+      if (!command) return;
+      const focused = interaction.options.getFocused(true);
+      const split = interaction.options.getString("split");
+      const isSplit = split === "winter" || split === "spring" || split === "summer";
+      const query = String(focused.value ?? "").toLowerCase();
+
+      let options: { name: string; value: string }[] = [];
+      console.log(`Autocomplete for ${interaction.commandName}, focused: ${focused.name}, query: ${query}`);
+      if (focused.name === "split") {
+        options = SPLITS;
+      } else if (focused.name === "equipe") {
+        if (interaction.commandName === "add_hans" || interaction.commandName === "hans_maga") {
+          options = isSplit ? LEC_TEAMS : INTERNATIONAL_TEAMS;
+        } else {
+          options = isSplit ? LCK_TEAMS : INTERNATIONAL_TEAMS;
+        }
+      }
+
+      const filtered = options
+        .filter((opt) => opt.name.toLowerCase().includes(query) || opt.value.toLowerCase().includes(query))
+        .slice(0, 25);
+      await interaction.respond(filtered);
+      return;
+    } catch (err) {
+      console.error("Autocomplete failed:", err);
+      try {
+        await interaction.respond([]);
+      } catch (respondErr) {
+        console.error("Autocomplete fallback failed:", respondErr);
+      }
       return;
     }
-    const command = commandMap.get(interaction.commandName);
-    if (!command) return;
-    const focused = interaction.options.getFocused(true);
-    const split = interaction.options.getString("split");
-    const isSplit = split === "winter" || split === "spring" || split === "summer";
-    const query = focused.value.toLowerCase();
-
-    let options: { name: string; value: string }[] = [];
-    console.log(`Autocomplete for ${interaction.commandName}, focused: ${focused.name}, query: ${query}`);
-    if (focused.name === "split") {
-      options = SPLITS;
-    } else if (focused.name === "equipe") {
-      if (interaction.commandName === "add_hans" || interaction.commandName === "hans_maga") {
-        options = isSplit ? LEC_TEAMS : INTERNATIONAL_TEAMS;
-      } else {
-        options = isSplit ? LCK_TEAMS : INTERNATIONAL_TEAMS;
-      }
-    }
-
-    const filtered = options
-      .filter((opt) => opt.name.toLowerCase().includes(query) || opt.value.toLowerCase().includes(query))
-      .slice(0, 25);
-    await interaction.respond(filtered);
-    return;
   }
 
   if (!interaction.isChatInputCommand()) return;
