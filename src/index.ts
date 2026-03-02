@@ -1,7 +1,7 @@
 import "dotenv/config";
 import { Client, GatewayIntentBits } from "discord.js";
 import { commands, commandMap } from "./commands";
-import { INTERNATIONAL_TEAMS, LEC_TEAMS, SPLITS } from "./teams";
+import { INTERNATIONAL_TEAMS, LCK_TEAMS, LEC_TEAMS, SPLITS } from "./teams";
 import { ensureDroolerTable, ensureHansFlashTable } from "./db";
 
 const token = process.env.DISCORD_TOKEN;
@@ -33,20 +33,22 @@ client.on("interactionCreate", async (interaction) => {
     ) {
       return;
     }
+    const command = commandMap.get(interaction.commandName);
+    if (!command) return;
     const focused = interaction.options.getFocused(true);
     const split = interaction.options.getString("split");
-    const isLecSplit = split === "winter" || split === "spring" || split === "summer";
+    const isSplit = split === "winter" || split === "spring" || split === "summer";
     const query = focused.value.toLowerCase();
 
     let options: { name: string; value: string }[] = [];
     if (focused.name === "split") {
       options = SPLITS;
-    } else if (focused.name === "equipe_lec") {
-      options = isLecSplit ? LEC_TEAMS : [];
     } else if (focused.name === "equipe") {
-      options = isLecSplit ? LEC_TEAMS : [];
-    } else if (focused.name === "equipe_international") {
-      options = isLecSplit ? [] : INTERNATIONAL_TEAMS;
+      if (interaction.commandName === "add_hans" || interaction.commandName === "hans_maga") {
+        options = isSplit ? LEC_TEAMS : INTERNATIONAL_TEAMS;
+      } else {
+        options = isSplit ? LCK_TEAMS : INTERNATIONAL_TEAMS;
+      }
     }
 
     const filtered = options

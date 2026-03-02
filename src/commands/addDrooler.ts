@@ -22,17 +22,7 @@ const data = new SlashCommandBuilder()
       .setName("equipe")
       .setDescription("L'équipe qui a attrapé Drooler")
       .setRequired(false)
-      .addChoices(
-        { name: "BNX FearX", value: "BFX" },
-        { name: "Hanjin Brion", value: "BRO" },
-        { name: "DRX", value: "DRX" },
-        { name: "DN Soopers", value: "DNS" },
-        { name: "Dplus KIA", value: "DK" },
-        { name: "Hanwha Life Esports", value: "HLE" },
-        { name: "Nongshim RedForce", value: "NS" },
-        { name: "T1", value: "T1" },
-        { name: "KT Rolster", value: "KT" }
-      )
+      .setAutocomplete(true)
     );
 
 async function execute(interaction: ChatInputCommandInteraction) {
